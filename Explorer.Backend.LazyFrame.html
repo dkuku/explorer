@@ -7,7 +7,7 @@
     <meta name="generator" content="ExDoc v0.29.4">
     <meta name="project" content="Explorer v0.5.7-dev">
 
-    <title>404 — Explorer v0.5.7-dev</title>
+    <title>Explorer.Backend.LazyFrame — Explorer v0.5.7-dev</title>
     <link rel="stylesheet" href="dist/html-elixir-HHVY3JYD.css" />
 
 
@@ -21,7 +21,7 @@
 
 
   </head>
-  <body data-type="extras" class="page-extra">
+  <body data-type="modules" class="page-module">
     <script>
 
       try {
@@ -99,15 +99,95 @@ Explorer
   <span class="sr-only">Settings</span>
 </button>
 
-  <span>Page not found</span>
+
+    <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/backend/lazy_frame.ex#L1" title="View Source" class="icon-action" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Explorer.Backend.LazyFrame</span> 
+  <small class="app-vsn" translate="no">(Explorer v0.5.7-dev)</small>
+
 </h1>
 
-<p>Sorry, but the page you were trying to get to, does not exist. You
-may want to try searching this site using the sidebar
 
-  or using our <a href="api-reference.html">API Reference</a> page
+  <section id="moduledoc">
+<p>Represents a lazy dataframe for building query expressions.</p><p>The LazyFrame is available inside <code class="inline">filter_with</code>, <code class="inline">mutate_with</code>, and
+similar. You cannot perform any operation on them except accessing
+its underlying series.</p>
+  </section>
 
-to find what you were looking for.</p>
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+<div class="summary-types summary">
+  <h2>
+    <a href="#types">Types</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:t/0" translate="no">t()</a>
+
+      </div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Types
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">t()</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/backend/lazy_frame.ex#L15" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: %Explorer.Backend.LazyFrame{
+  dtypes: <a href="Explorer.Backend.DataFrame.html#t:dtypes/0">Explorer.Backend.DataFrame.dtypes</a>(),
+  names: <a href="Explorer.Backend.DataFrame.html#t:column_name/0">Explorer.Backend.DataFrame.column_name</a>()
+}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
       <footer class="footer">
         <p>
 
@@ -115,6 +195,8 @@ to find what you were looking for.</p>
               <a href="https://hex.pm/packages/explorer/0.5.7-dev" class="footer-hex-package">Hex Package</a>
 
               <a href="https://preview.hex.pm/preview/explorer/0.5.7-dev">Hex Preview</a>
+
+                (<a href="https://preview.hex.pm/preview/explorer/0.5.7-dev/show/lib/explorer/backend/lazy_frame.ex">current file</a>)
 
             </span>
 

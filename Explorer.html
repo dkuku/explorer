@@ -4,21 +4,24 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.28.3">
-    <meta name="project" content="Explorer v0.2.0-dev">
+    <meta name="generator" content="ExDoc v0.29.4">
+    <meta name="project" content="Explorer v0.5.7-dev">
 
-    <title>Explorer — Explorer v0.2.0-dev</title>
-    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+    <title>Explorer — Explorer v0.5.7-dev</title>
+    <link rel="stylesheet" href="dist/html-elixir-HHVY3JYD.css" />
 
-    <script src="dist/sidebar_items-1907890c7c.js"></script>
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-XWGFFSCD.js"></script>
+    <script src="dist/sidebar_items-9F357495.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+    <script async src="dist/html-JDI3AVDD.js"></script>
 
 
   </head>
-  <body data-type="modules">
+  <body data-type="modules" class="page-module">
     <script>
 
       try {
@@ -35,12 +38,11 @@
 
 <div class="main">
 
+<button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
 
 <section class="sidebar">
-  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
-    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
-  </button>
-
   <form class="sidebar-search" action="search.html">
     <button type="submit" class="search-button" aria-label="Submit Search">
       <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
@@ -50,7 +52,7 @@
     </button>
     <label class="search-label">
       <p class="sr-only">Search</p>
-      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
     </label>
   </form>
 
@@ -69,9 +71,9 @@
       <a href="Explorer.html" class="sidebar-projectName" translate="no">
 Explorer
       </a>
-      <strong class="sidebar-projectVersion" translate="no">
-        v0.2.0-dev
-      </strong>
+      <div class="sidebar-projectVersion" translate="no">
+        v0.5.7-dev
+      </div>
     </div>
     <ul class="sidebar-listNav">
       <li><a id="extras-list-link" href="#full-list">Pages</a></li>
@@ -83,61 +85,151 @@ Explorer
   </div>
 
   <div class="gradient"></div>
-  <ul id="full-list" class="sidebar-fullList"></ul>
+  <ul id="full-list"></ul>
 </section>
 
 <section class="content">
+  <output role="status" id="toast"></output>
   <div class="content-outer">
     <div id="content" class="content-inner">
 
 <h1>
-<button class="settings display-settings">
+<button class="icon-action display-settings">
   <i class="ri-settings-3-line"></i>
   <span class="sr-only">Settings</span>
 </button>
 
 
-    <a href="https://github.com/elixir-nx/explorer/blob/v0.2.0-dev/lib/explorer.ex#L1" title="View Source" class="view-source" rel="help">
+    <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer.ex#L1" title="View Source" class="icon-action" rel="help">
       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
       <span class="sr-only">View Source</span>
     </a>
 
   <span translate="no">Explorer</span> 
-  <small class="app-vsn" translate="no">(Explorer v0.2.0-dev)</small>
+  <small class="app-vsn" translate="no">(Explorer v0.5.7-dev)</small>
 
 </h1>
 
 
   <section id="moduledoc">
-<p>Explorer brings series (one-dimensional) and dataframes (two-dimensional)
-for fast data exploration to Elixir.</p><p>Most of the functionality in <a href="Explorer.html#content"><code class="inline">Explorer</code></a> is in <a href="Explorer.DataFrame.html"><code class="inline">Explorer.DataFrame</code></a> and
-<a href="Explorer.Series.html"><code class="inline">Explorer.Series</code></a>. Refer to those modules for more in-depth documentation.</p>
+<p>Explorer brings series (one-dimensional) and dataframes (two-dimensional) for fast
+data exploration to Elixir.</p><h2 id="module-getting-started" class="section-heading">
+  <a href="#module-getting-started" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">getting-started</p>
+  </a>
+  Getting started
+</h2>
+<p>Inside an Elixir script or <a href="https://livebook.dev">Livebook</a>:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Mix</span><span class="o">.</span><span class="n">install</span><span class="p" data-group-id="6708111215-1">(</span><span class="p" data-group-id="6708111215-2">[</span><span class="w">
+  </span><span class="p" data-group-id="6708111215-3">{</span><span class="ss">:explorer</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 0.5.0&quot;</span><span class="p" data-group-id="6708111215-3">}</span><span class="w">
+</span><span class="p" data-group-id="6708111215-2">]</span><span class="p" data-group-id="6708111215-1">)</span></code></pre><p>Or in the <code class="inline">mix.exs</code> file of your application:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">deps</span><span class="w"> </span><span class="k" data-group-id="2880454533-1">do</span><span class="w">
+  </span><span class="p" data-group-id="2880454533-2">[</span><span class="w">
+    </span><span class="p" data-group-id="2880454533-3">{</span><span class="ss">:explorer</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 0.5.0&quot;</span><span class="p" data-group-id="2880454533-3">}</span><span class="w">
+  </span><span class="p" data-group-id="2880454533-2">]</span><span class="w">
+</span><span class="k" data-group-id="2880454533-1">end</span></code></pre><h2 id="module-a-glimpse-of-the-api" class="section-heading">
+  <a href="#module-a-glimpse-of-the-api" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">a-glimpse-of-the-api</p>
+  </a>
+  A glimpse of the API
+</h2>
+<p>We have two ways to represent data with Explorer:</p><ul><li><p>using a series, that is similar to a list, but is guaranteed to contain items
+of one data type only - or one <em>dtype</em> for short. Notice that nil values are
+permitted in series of any dtype.</p></li><li><p>using a dataframe, that is just a way to represent one or more series together,
+and work with them as a whole. The only restriction is that all the series shares
+the same size.</p></li></ul><p>A series can be created from a list:</p><pre><code class="makeup elixir" translate="no"><span class="n">fruits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.Series</span><span class="o">.</span><span class="n">from_list</span><span class="p" data-group-id="9412132560-1">(</span><span class="p" data-group-id="9412132560-2">[</span><span class="s">&quot;apple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mango&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;orange&quot;</span><span class="p" data-group-id="9412132560-2">]</span><span class="p" data-group-id="9412132560-1">)</span></code></pre><p>Your newly created series is going to look like:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="4292926829-1">#</span><span class="nc" data-group-id="4292926829-1">Explorer.Series</span><span class="p" data-group-id="4292926829-1">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="4292926829-2">[</span><span class="mi">4</span><span class="p" data-group-id="4292926829-2">]</span><span class="w">
+  </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="4292926829-3">[</span><span class="s">&quot;apple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mango&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;orange&quot;</span><span class="p" data-group-id="4292926829-3">]</span><span class="w">
+</span><span class="p" data-group-id="4292926829-1">&gt;</span></code></pre><p>And you can, for example, sort that series:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Explorer.Series</span><span class="o">.</span><span class="n">sort</span><span class="p" data-group-id="0585223051-1">(</span><span class="n">fruits</span><span class="p" data-group-id="0585223051-1">)</span></code></pre><p>Resulting in the following:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="7782583139-1">#</span><span class="nc" data-group-id="7782583139-1">Explorer.Series</span><span class="p" data-group-id="7782583139-1">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="7782583139-2">[</span><span class="mi">4</span><span class="p" data-group-id="7782583139-2">]</span><span class="w">
+  </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="7782583139-3">[</span><span class="s">&quot;apple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mango&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;orange&quot;</span><span class="p" data-group-id="7782583139-3">]</span><span class="w">
+</span><span class="p" data-group-id="7782583139-1">&gt;</span></code></pre><h3 id="module-dataframes" class="section-heading">
+  <a href="#module-dataframes" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">dataframes</p>
+  </a>
+  Dataframes
+</h3>
+<p>Dataframes can be created in two ways:</p><ul><li><p>by reading from files or memory using the
+<a href="https://hexdocs.pm/explorer/Explorer.DataFrame.html#module-io-operations">IO functions</a>.
+This is by far the most common way to load dataframes in Explorer.
+We accept Parquet, IPC, CSV, and NDJSON files.</p></li><li><p>by using the <a href="Explorer.DataFrame.html#new/2"><code class="inline">Explorer.DataFrame.new/2</code></a> function, that is neat for small experiments.
+We are going to use this function here.</p></li></ul><p>You can pass either series or lists to it:</p><pre><code class="makeup elixir" translate="no"><span class="n">mountains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="6234440202-1">(</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6234440202-2">[</span><span class="s">&quot;Everest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;K2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Aconcagua&quot;</span><span class="p" data-group-id="6234440202-2">]</span><span class="p">,</span><span class="w"> </span><span class="ss">elevation</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6234440202-3">[</span><span class="mi">8848</span><span class="p">,</span><span class="w"> </span><span class="mi">8611</span><span class="p">,</span><span class="w"> </span><span class="mi">6962</span><span class="p" data-group-id="6234440202-3">]</span><span class="p" data-group-id="6234440202-1">)</span></code></pre><p>Your dataframe is going to look like this:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="2866044427-1">#</span><span class="nc" data-group-id="2866044427-1">Explorer.DataFrame</span><span class="p" data-group-id="2866044427-1">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="2866044427-2">[</span><span class="mi">3</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="2866044427-2">]</span><span class="w">
+  </span><span class="n">name</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="2866044427-3">[</span><span class="s">&quot;Everest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;K2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Aconcagua&quot;</span><span class="p" data-group-id="2866044427-3">]</span><span class="w">
+  </span><span class="n">elevation</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="2866044427-4">[</span><span class="mi">8848</span><span class="p">,</span><span class="w"> </span><span class="mi">8611</span><span class="p">,</span><span class="w"> </span><span class="mi">6962</span><span class="p" data-group-id="2866044427-4">]</span><span class="w">
+</span><span class="p" data-group-id="2866044427-1">&gt;</span></code></pre><p>It's also possible to see a dataframe like a table, using the <a href="Explorer.DataFrame.html#table/2"><code class="inline">Explorer.DataFrame.table/2</code></a>
+function:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">table</span><span class="p" data-group-id="9876884561-1">(</span><span class="n">mountains</span><span class="p" data-group-id="9876884561-1">)</span></code></pre><p>Prints:</p><pre><code class="makeup elixir" translate="no"><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="w">
+</span><span class="o">|</span><span class="w"> </span><span class="nc">Explorer</span><span class="w"> </span><span class="ss">DataFrame</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5051142033-1">[</span><span class="ss">rows</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="ss">columns</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="5051142033-1">]</span><span class="w"> </span><span class="o">|</span><span class="w">
+</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="w">
+</span><span class="o">|</span><span class="w">        </span><span class="n">name</span><span class="w">         </span><span class="o">|</span><span class="w">      </span><span class="n">elevation</span><span class="w">      </span><span class="o">|</span><span class="w">
+</span><span class="o">|</span><span class="w">      </span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w">       </span><span class="o">|</span><span class="w">      </span><span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span><span class="w">      </span><span class="o">|</span><span class="w">
+</span><span class="o">+</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">+</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">===</span><span class="o">+</span><span class="w">
+</span><span class="o">|</span><span class="w"> </span><span class="nc">Everest</span><span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="mi">8848</span><span class="w">                </span><span class="o">|</span><span class="w">
+</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="w">
+</span><span class="o">|</span><span class="w"> </span><span class="nc">K2</span><span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="mi">8611</span><span class="w">                </span><span class="o">|</span><span class="w">
+</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="w">
+</span><span class="o">|</span><span class="w"> </span><span class="nc">Aconcagua</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="mi">6962</span><span class="w">                </span><span class="o">|</span><span class="w">
+</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">--</span><span class="o">-</span><span class="o">+</span></code></pre><p>And now I want to show you how to filter our dataframe. But first, let's require
+the <a href="Explorer.DataFrame.html"><code class="inline">Explorer.DataFrame</code></a> module and give a short name to it:</p><pre><code class="makeup elixir" translate="no"><span class="kn">require</span><span class="w"> </span><span class="nc">Explorer.DataFrame</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="nc">DF</span></code></pre><p>The &quot;require&quot; is needed to load the macro features of that module.
+We give it a shorter name to simplify our examples.</p><p>Now let's go to the filter. I want to filter the mountains that are above
+the mean elevation in our dataframe:</p><pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="9476991462-1">(</span><span class="n">mountains</span><span class="p">,</span><span class="w"> </span><span class="n">elevation</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="9476991462-2">(</span><span class="n">elevation</span><span class="p" data-group-id="9476991462-2">)</span><span class="p" data-group-id="9476991462-1">)</span></code></pre><p>You can see that we can refer to the columns using their names, and use functions
+without define them. This is possible due the powerful <a href="Explorer.Query.html"><code class="inline">Explorer.Query</code></a> features,
+and it's the main reason we need to &quot;require&quot; the <a href="Explorer.DataFrame.html"><code class="inline">Explorer.DataFrame</code></a> module.</p><p>The result is going to look like this:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="8314588827-1">#</span><span class="nc" data-group-id="8314588827-1">Explorer.DataFrame</span><span class="p" data-group-id="8314588827-1">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="8314588827-2">[</span><span class="mi">2</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8314588827-2">]</span><span class="w">
+  </span><span class="n">name</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="8314588827-3">[</span><span class="s">&quot;Everest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;K2&quot;</span><span class="p" data-group-id="8314588827-3">]</span><span class="w">
+  </span><span class="n">elevation</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="8314588827-4">[</span><span class="mi">8848</span><span class="p">,</span><span class="w"> </span><span class="mi">8611</span><span class="p" data-group-id="8314588827-4">]</span><span class="w">
+</span><span class="p" data-group-id="8314588827-1">&gt;</span></code></pre><p>There is an extensive guide that you can play with Livebook:
+<a href="https://hexdocs.pm/explorer/exploring_explorer.html">Ten Minutes to Explorer</a></p><p>You can also check the <a href="Explorer.DataFrame.html"><code class="inline">Explorer.DataFrame</code></a> and <a href="Explorer.Series.html"><code class="inline">Explorer.Series</code></a> docs for further
+details.</p><h2 id="module-features-and-design" class="section-heading">
+  <a href="#module-features-and-design" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">features-and-design</p>
+  </a>
+  Features and design
+</h2>
+<p>Explorer high-level features are:</p><ul><li><p>Simply typed series: <code class="inline">:binary</code>, <code class="inline">:boolean</code>, <code class="inline">:category</code>, <code class="inline">:date</code>, <code class="inline">:datetime</code>, <code class="inline">:float</code>, <code class="inline">:integer</code>, <code class="inline">:string</code>, and <code class="inline">:time</code>.</p></li><li><p>A powerful but constrained and opinionated API, so you spend less time looking
+for the right function and more time doing data manipulation.</p></li><li><p>Pluggable backends, providing a uniform API whether you're working in-memory
+or (forthcoming) on remote databases or even Spark dataframes.</p></li><li><p>The first (and default) backend is based on NIF bindings to the blazing-fast
+<a href="https://docs.rs/polars">polars</a> library.</p></li></ul><p>The API is heavily influenced by <a href="https://vita.had.co.nz/papers/tidy-data.pdf">Tidy Data</a>
+and borrows much of its design from <a href="https://dplyr.tidyverse.org">dplyr</a>. The philosophy
+is heavily influenced by this passage from <code class="inline">dplyr</code>'s documentation:</p><blockquote><ul><li><p>By constraining your options, it helps you think about your data manipulation
+challenges.</p></li><li><p>It provides simple “verbs”, functions that correspond to the most common data
+manipulation tasks, to help you translate your thoughts into code.</p></li><li><p>It uses efficient backends, so you spend less time waiting for the computer.</p></li></ul></blockquote><p>The aim here isn't to have the fastest dataframe library around (though it certainly
+helps that <a href="https://h2oai.github.io/db-benchmark/">we're building on Polars, one of the fastest</a>).
+Instead, we're aiming to bridge the best of many worlds:</p><ul><li>the elegance of <code class="inline">dplyr</code></li><li>the speed of <code class="inline">polars</code></li><li>the joy of Elixir</li></ul><p>That means you can expect the guiding principles to be 'Elixir-ish'. For example,
+you won't see the underlying data mutated, even if that's the most efficient implementation.
+Explorer functions will always return a new dataframe or series.</p>
   </section>
 
 
 
       <footer class="footer">
-
-          <p>
-            On Hex.pm:
+        <p>
 
             <span class="line">
-              <a href="https://hex.pm/packages/explorer/0.2.0-dev" class="line footer-hex-package">Package</a>
-              <a href="https://preview.hex.pm/preview/explorer/0.2.0-dev" class="line">Preview</a>
+              <a href="https://hex.pm/packages/explorer/0.5.7-dev" class="footer-hex-package">Hex Package</a>
 
-                <a href="https://preview.hex.pm/preview/explorer/0.2.0-dev/show/lib/explorer.ex">(current file)</a>
+              <a href="https://preview.hex.pm/preview/explorer/0.5.7-dev">Hex Preview</a>
+
+                (<a href="https://preview.hex.pm/preview/explorer/0.5.7-dev/show/lib/explorer.ex">current file</a>)
 
             </span>
 
-            <button class="line footer-button display-quick-switch">
-              Search
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+              Search HexDocs
             </button>
-          </p>
 
-        <p>
+              <a href="Explorer.epub" title="ePub version">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
           Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
-          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.29.4) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
         </p>
       </footer>
     </div>

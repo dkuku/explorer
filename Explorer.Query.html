@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.29.4">
+    <meta name="project" content="Explorer v0.5.7-dev">
+
+    <title>Explorer.Query — Explorer v0.5.7-dev</title>
+    <link rel="stylesheet" href="dist/html-elixir-HHVY3JYD.css" />
+
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-XWGFFSCD.js"></script>
+    <script src="dist/sidebar_items-9F357495.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/html-JDI3AVDD.js"></script>
+
+
+  </head>
+  <body data-type="modules" class="page-module">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+      <a href="Explorer.html">
+        <img src="assets/logo.png" alt="Explorer" class="sidebar-projectImage">
+      </a>
+
+    <div class="sidebar-projectDetails">
+      <a href="Explorer.html" class="sidebar-projectName" translate="no">
+Explorer
+      </a>
+      <div class="sidebar-projectVersion" translate="no">
+        v0.5.7-dev
+      </div>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list"></ul>
+</section>
+
+<section class="content">
+  <output role="status" id="toast"></output>
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="icon-action display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L1" title="View Source" class="icon-action" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Explorer.Query</span> 
+  <small class="app-vsn" translate="no">(Explorer v0.5.7-dev)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<p>High-level query for Explorer.</p><blockquote><h4 class="tip">Explorer.DataFrame vs DF</h4><p>All examples below assume you have defined aliased
+<a href="Explorer.DataFrame.html"><code class="inline">Explorer.DataFrame</code></a> to <code class="inline">DF</code> as shown below:</p><pre><code class="makeup elixir" translate="no"><span class="kn">alias</span><span class="w"> </span><span class="nc">Explorer.DataFrame</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="nc">DF</span></code></pre></blockquote><p>Queries convert regular Elixir code which compile to efficient
+dataframes operations. Inside a query, only the limited set of
+Series operations are available and identifiers, such as <code class="inline">strs</code>
+and <code class="inline">nums</code>, represent dataframe column names:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="7955127434-1">(</span><span class="ss">strs</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7955127434-2">[</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="7955127434-2">]</span><span class="p">,</span><span class="w"> </span><span class="ss">nums</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7955127434-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="7955127434-3">]</span><span class="p" data-group-id="7955127434-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="7955127434-4">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7955127434-4">)</span><span class="w">
+</span><span class="p" data-group-id="7955127434-5">#</span><span class="nc" data-group-id="7955127434-5">Explorer.DataFrame</span><span class="p" data-group-id="7955127434-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="7955127434-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7955127434-6">]</span><span class="w">
+  </span><span class="n">strs</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="7955127434-7">[</span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="7955127434-7">]</span><span class="w">
+  </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="7955127434-8">[</span><span class="mi">3</span><span class="p" data-group-id="7955127434-8">]</span><span class="w">
+</span><span class="p" data-group-id="7955127434-5">&gt;</span></code></pre><p>If a column has unusual format, you can either rename it before-hand,
+or use <a href="#col/1"><code class="inline">col/1</code></a> inside queries:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="3277452396-1">(</span><span class="ss">&quot;unusual nums&quot;</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3277452396-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="3277452396-2">]</span><span class="p" data-group-id="3277452396-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="3277452396-3">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="p" data-group-id="3277452396-4">(</span><span class="s">&quot;unusual nums&quot;</span><span class="p" data-group-id="3277452396-4">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="3277452396-3">)</span><span class="w">
+</span><span class="p" data-group-id="3277452396-5">#</span><span class="nc" data-group-id="3277452396-5">Explorer.DataFrame</span><span class="p" data-group-id="3277452396-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="3277452396-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="3277452396-6">]</span><span class="w">
+  </span><span class="n">unusual</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="3277452396-7">[</span><span class="mi">3</span><span class="p" data-group-id="3277452396-7">]</span><span class="w">
+</span><span class="p" data-group-id="3277452396-5">&gt;</span></code></pre><p>All operations from <a href="Explorer.Series.html"><code class="inline">Explorer.Series</code></a> are imported inside queries.
+This module also provides operators to use in queries, which are
+also imported into queries.</p><h2 id="module-supported-operations" class="section-heading">
+  <a href="#module-supported-operations" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">supported-operations</p>
+  </a>
+  Supported operations
+</h2>
+<p>Queries are supported in the following operations:</p><ul><li><a href="Explorer.DataFrame.html#arrange/2"><code class="inline">Explorer.DataFrame.arrange/2</code></a></li><li><a href="Explorer.DataFrame.html#filter/2"><code class="inline">Explorer.DataFrame.filter/2</code></a></li><li><a href="Explorer.DataFrame.html#mutate/2"><code class="inline">Explorer.DataFrame.mutate/2</code></a></li><li><a href="Explorer.DataFrame.html#summarise/2"><code class="inline">Explorer.DataFrame.summarise/2</code></a></li></ul><h2 id="module-interpolation" class="section-heading">
+  <a href="#module-interpolation" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">interpolation</p>
+  </a>
+  Interpolation
+</h2>
+<p>If you want to access variables defined outside of the query
+or get access to all Elixir constructs, you must use <code class="inline">^</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="5144479362-1">(</span><span class="ss">strs</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5144479362-2">[</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="5144479362-2">]</span><span class="p">,</span><span class="w"> </span><span class="ss">nums</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5144479362-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="5144479362-3">]</span><span class="p" data-group-id="5144479362-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="5144479362-4">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">^</span><span class="n">min</span><span class="p" data-group-id="5144479362-4">)</span><span class="w">
+</span><span class="p" data-group-id="5144479362-5">#</span><span class="nc" data-group-id="5144479362-5">Explorer.DataFrame</span><span class="p" data-group-id="5144479362-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="5144479362-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="5144479362-6">]</span><span class="w">
+  </span><span class="n">strs</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="5144479362-7">[</span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="5144479362-7">]</span><span class="w">
+  </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="5144479362-8">[</span><span class="mi">3</span><span class="p" data-group-id="5144479362-8">]</span><span class="w">
+</span><span class="p" data-group-id="5144479362-5">&gt;</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="5144479362-9">(</span><span class="ss">strs</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5144479362-10">[</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="5144479362-10">]</span><span class="p">,</span><span class="w"> </span><span class="ss">nums</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5144479362-11">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="5144479362-11">]</span><span class="p" data-group-id="5144479362-9">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="5144479362-12">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">^</span><span class="k">if</span><span class="p" data-group-id="5144479362-13">(</span><span class="n">min</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="ss">else</span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">10</span><span class="p" data-group-id="5144479362-13">)</span><span class="p" data-group-id="5144479362-12">)</span><span class="w">
+</span><span class="p" data-group-id="5144479362-14">#</span><span class="nc" data-group-id="5144479362-14">Explorer.DataFrame</span><span class="p" data-group-id="5144479362-14">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="5144479362-15">[</span><span class="mi">3</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="5144479362-15">]</span><span class="w">
+  </span><span class="n">strs</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="5144479362-16">[</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;c&quot;</span><span class="p" data-group-id="5144479362-16">]</span><span class="w">
+  </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="5144479362-17">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="5144479362-17">]</span><span class="w">
+</span><span class="p" data-group-id="5144479362-14">&gt;</span></code></pre><p><code class="inline">^</code> can be used with <code class="inline">col</code> to access columns dynamically:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8482486247-1">(</span><span class="ss">&quot;unusual nums&quot;</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8482486247-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8482486247-2">]</span><span class="p" data-group-id="8482486247-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;unusual nums&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="8482486247-3">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="p" data-group-id="8482486247-4">(</span><span class="o">^</span><span class="n">name</span><span class="p" data-group-id="8482486247-4">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8482486247-3">)</span><span class="w">
+</span><span class="p" data-group-id="8482486247-5">#</span><span class="nc" data-group-id="8482486247-5">Explorer.DataFrame</span><span class="p" data-group-id="8482486247-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="8482486247-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8482486247-6">]</span><span class="w">
+  </span><span class="n">unusual</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="8482486247-7">[</span><span class="mi">3</span><span class="p" data-group-id="8482486247-7">]</span><span class="w">
+</span><span class="p" data-group-id="8482486247-5">&gt;</span></code></pre><h2 id="module-across-and-comprehensions" class="section-heading">
+  <a href="#module-across-and-comprehensions" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">across-and-comprehensions</p>
+  </a>
+  Across and comprehensions
+</h2>
+<p><a href="Explorer.Query.html#content"><code class="inline">Explorer.Query</code></a> leverages the power behind Elixir for-comprehensions
+to provide a powerful syntax for traversing several columns in a dataframe
+at once. For example, imagine you want to standardization the data on the
+iris dataset, you could write this:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">iris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.Datasets</span><span class="o">.</span><span class="n">iris</span><span class="p" data-group-id="2640273614-1">(</span><span class="p" data-group-id="2640273614-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="2640273614-2">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="ss">sepal_width</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2640273614-3">(</span><span class="n">sepal_width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2640273614-4">(</span><span class="n">sepal_width</span><span class="p" data-group-id="2640273614-4">)</span><span class="p" data-group-id="2640273614-3">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2640273614-5">(</span><span class="n">sepal_width</span><span class="p" data-group-id="2640273614-5">)</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="ss">sepal_length</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2640273614-6">(</span><span class="n">sepal_length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2640273614-7">(</span><span class="n">sepal_length</span><span class="p" data-group-id="2640273614-7">)</span><span class="p" data-group-id="2640273614-6">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2640273614-8">(</span><span class="n">sepal_length</span><span class="p" data-group-id="2640273614-8">)</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="ss">petal_length</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2640273614-9">(</span><span class="n">petal_length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2640273614-10">(</span><span class="n">petal_length</span><span class="p" data-group-id="2640273614-10">)</span><span class="p" data-group-id="2640273614-9">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2640273614-11">(</span><span class="n">petal_length</span><span class="p" data-group-id="2640273614-11">)</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="ss">petal_width</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2640273614-12">(</span><span class="n">petal_width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2640273614-13">(</span><span class="n">petal_width</span><span class="p" data-group-id="2640273614-13">)</span><span class="p" data-group-id="2640273614-12">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2640273614-14">(</span><span class="n">petal_width</span><span class="p" data-group-id="2640273614-14">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="2640273614-2">)</span><span class="w">
+</span><span class="p" data-group-id="2640273614-15">#</span><span class="nc" data-group-id="2640273614-15">Explorer.DataFrame</span><span class="p" data-group-id="2640273614-15">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="2640273614-16">[</span><span class="mi">150</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="2640273614-16">]</span><span class="w">
+  </span><span class="n">sepal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2640273614-17">[</span><span class="o">-</span><span class="mf">1.0840606189132314</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.3757361217598396</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.6674116246064494</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.8132493760297548</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.2298983703365356</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2640273614-17">]</span><span class="w">
+  </span><span class="n">sepal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2640273614-18">[</span><span class="mf">2.372289612531505</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.28722789030650403</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7765791108287006</span><span class="p">,</span><span class="w"> </span><span class="mf">0.24467561026109824</span><span class="p">,</span><span class="w"> </span><span class="mf">2.904193113099107</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2640273614-18">]</span><span class="w">
+  </span><span class="n">petal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2640273614-19">[</span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7897606710936372</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.725517666395131</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2640273614-19">]</span><span class="w">
+  </span><span class="n">petal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2640273614-20">[</span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2640273614-20">]</span><span class="w">
+  </span><span class="n">species</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="2640273614-21">[</span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2640273614-21">]</span><span class="w">
+</span><span class="p" data-group-id="2640273614-15">&gt;</span></code></pre><p>While the code above does its job, it is quite repetitive. With across and for-comprehensions,
+we could instead write:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">iris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.Datasets</span><span class="o">.</span><span class="n">iris</span><span class="p" data-group-id="5907165979-1">(</span><span class="p" data-group-id="5907165979-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="5907165979-2">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="5907165979-3">(</span><span class="p" data-group-id="5907165979-4">[</span><span class="s">&quot;sepal_width&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sepal_length&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;petal_length&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;petal_width&quot;</span><span class="p" data-group-id="5907165979-4">]</span><span class="p" data-group-id="5907165979-3">)</span><span class="w"> </span><span class="k" data-group-id="5907165979-5">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="p" data-group-id="5907165979-6">{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5907165979-7">(</span><span class="n">col</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="5907165979-8">(</span><span class="n">col</span><span class="p" data-group-id="5907165979-8">)</span><span class="p" data-group-id="5907165979-7">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="5907165979-9">(</span><span class="n">col</span><span class="p" data-group-id="5907165979-9">)</span><span class="p" data-group-id="5907165979-6">}</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k" data-group-id="5907165979-5">end</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="5907165979-2">)</span><span class="w">
+</span><span class="p" data-group-id="5907165979-10">#</span><span class="nc" data-group-id="5907165979-10">Explorer.DataFrame</span><span class="p" data-group-id="5907165979-10">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="5907165979-11">[</span><span class="mi">150</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="5907165979-11">]</span><span class="w">
+  </span><span class="n">sepal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="5907165979-12">[</span><span class="o">-</span><span class="mf">1.0840606189132314</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.3757361217598396</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.6674116246064494</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.8132493760297548</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.2298983703365356</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="5907165979-12">]</span><span class="w">
+  </span><span class="n">sepal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="5907165979-13">[</span><span class="mf">2.372289612531505</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.28722789030650403</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7765791108287006</span><span class="p">,</span><span class="w"> </span><span class="mf">0.24467561026109824</span><span class="p">,</span><span class="w"> </span><span class="mf">2.904193113099107</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="5907165979-13">]</span><span class="w">
+  </span><span class="n">petal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="5907165979-14">[</span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7897606710936372</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.725517666395131</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="5907165979-14">]</span><span class="w">
+  </span><span class="n">petal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="5907165979-15">[</span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="5907165979-15">]</span><span class="w">
+  </span><span class="n">species</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="5907165979-16">[</span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="5907165979-16">]</span><span class="w">
+</span><span class="p" data-group-id="5907165979-10">&gt;</span></code></pre><p>Which achieves the same result in a more concise and maintainable way.
+<a href="#across/1"><code class="inline">across/1</code></a> may receive any of the following input as arguments:</p><ul><li><p>a list of columns indexes or names as atoms and strings</p></li><li><p>a range</p></li><li><p>a regex that keeps only the names matching the regex</p></li></ul><p>For example, since we know the width and length columns are the first four,
+we could also have written (remember ranges in Elixir are inclusive):</p><pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="8027869595-1">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="8027869595-2">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p" data-group-id="8027869595-2">)</span><span class="w"> </span><span class="k" data-group-id="8027869595-3">do</span><span class="w">
+    </span><span class="p" data-group-id="8027869595-4">{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8027869595-5">(</span><span class="n">col</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="8027869595-6">(</span><span class="n">col</span><span class="p" data-group-id="8027869595-6">)</span><span class="p" data-group-id="8027869595-5">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="8027869595-7">(</span><span class="n">col</span><span class="p" data-group-id="8027869595-7">)</span><span class="p" data-group-id="8027869595-4">}</span><span class="w">
+  </span><span class="k" data-group-id="8027869595-3">end</span><span class="w">
+</span><span class="p" data-group-id="8027869595-1">)</span></code></pre><p>Or using a regex:</p><pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="2182197073-1">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="2182197073-2">(</span><span class="sr">~r/(sepal|petal)_(length|width)/</span><span class="p" data-group-id="2182197073-2">)</span><span class="w"> </span><span class="k" data-group-id="2182197073-3">do</span><span class="w">
+    </span><span class="p" data-group-id="2182197073-4">{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2182197073-5">(</span><span class="n">col</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2182197073-6">(</span><span class="n">col</span><span class="p" data-group-id="2182197073-6">)</span><span class="p" data-group-id="2182197073-5">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2182197073-7">(</span><span class="n">col</span><span class="p" data-group-id="2182197073-7">)</span><span class="p" data-group-id="2182197073-4">}</span><span class="w">
+  </span><span class="k" data-group-id="2182197073-3">end</span><span class="w">
+</span><span class="p" data-group-id="2182197073-1">)</span></code></pre><p>For those new to Elixir, for-comprehensions have the following format:</p><pre><code class="makeup elixir" translate="no"><span class="k">for</span><span class="w"> </span><span class="nc">PATTERN</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">GENERATOR</span><span class="p">,</span><span class="w"> </span><span class="nc">FILTER</span><span class="w"> </span><span class="k" data-group-id="7341855663-1">do</span><span class="w">
+  </span><span class="nc">EXPR</span><span class="w">
+</span><span class="k" data-group-id="7341855663-1">end</span></code></pre><p>A comprehension filter is a mechanism that allows us to keep only columns
+based on additional properties, such as its <code class="inline">dtype</code>. A for-comprehension can
+have multiple generators and filters. For instance, if you want to apply
+standardization to all float columns, we can use <a href="#across/0"><code class="inline">across/0</code></a> to access all
+columns and then use a filter to keep only the float ones:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">iris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.Datasets</span><span class="o">.</span><span class="n">iris</span><span class="p" data-group-id="2390056892-1">(</span><span class="p" data-group-id="2390056892-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="2390056892-2">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="2390056892-3">(</span><span class="p" data-group-id="2390056892-3">)</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="o">.</span><span class="n">dtype</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:float</span><span class="w"> </span><span class="k" data-group-id="2390056892-4">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="p" data-group-id="2390056892-5">{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2390056892-6">(</span><span class="n">col</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="2390056892-7">(</span><span class="n">col</span><span class="p" data-group-id="2390056892-7">)</span><span class="p" data-group-id="2390056892-6">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">variance</span><span class="p" data-group-id="2390056892-8">(</span><span class="n">col</span><span class="p" data-group-id="2390056892-8">)</span><span class="p" data-group-id="2390056892-5">}</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k" data-group-id="2390056892-4">end</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="2390056892-2">)</span><span class="w">
+</span><span class="p" data-group-id="2390056892-9">#</span><span class="nc" data-group-id="2390056892-9">Explorer.DataFrame</span><span class="p" data-group-id="2390056892-9">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="2390056892-10">[</span><span class="mi">150</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="2390056892-10">]</span><span class="w">
+  </span><span class="n">sepal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2390056892-11">[</span><span class="o">-</span><span class="mf">1.0840606189132314</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.3757361217598396</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.6674116246064494</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.8132493760297548</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.2298983703365356</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2390056892-11">]</span><span class="w">
+  </span><span class="n">sepal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2390056892-12">[</span><span class="mf">2.372289612531505</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.28722789030650403</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7765791108287006</span><span class="p">,</span><span class="w"> </span><span class="mf">0.24467561026109824</span><span class="p">,</span><span class="w"> </span><span class="mf">2.904193113099107</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2390056892-12">]</span><span class="w">
+  </span><span class="n">petal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2390056892-13">[</span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7897606710936372</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.725517666395131</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7576391687443842</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2390056892-13">]</span><span class="w">
+  </span><span class="n">petal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="2390056892-14">[</span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.7147014356654704</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2390056892-14">]</span><span class="w">
+  </span><span class="n">species</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="2390056892-15">[</span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2390056892-15">]</span><span class="w">
+</span><span class="p" data-group-id="2390056892-9">&gt;</span></code></pre><p>For-comprehensions works with all dataframe verbs. As we have seen
+above, for mutations we must return tuples as pair with the mutation
+name and its value. <code class="inline">summarise</code> works similarly. Note in both cases
+the name could also be generated dynamically. For example, to compute
+the mean per species, you could write:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Explorer.Datasets</span><span class="o">.</span><span class="n">iris</span><span class="p" data-group-id="0575151521-1">(</span><span class="p" data-group-id="0575151521-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">group_by</span><span class="p" data-group-id="0575151521-2">(</span><span class="s">&quot;species&quot;</span><span class="p" data-group-id="0575151521-2">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">summarise</span><span class="p" data-group-id="0575151521-3">(</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="0575151521-4">(</span><span class="p" data-group-id="0575151521-4">)</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="o">.</span><span class="n">dtype</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:float</span><span class="w"> </span><span class="k" data-group-id="0575151521-5">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="p" data-group-id="0575151521-6">{</span><span class="s">&quot;</span><span class="si" data-group-id="0575151521-7">#{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="si" data-group-id="0575151521-7">}</span><span class="s">_mean&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="0575151521-8">(</span><span class="n">col</span><span class="p" data-group-id="0575151521-8">)</span><span class="p" data-group-id="0575151521-6">}</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k" data-group-id="0575151521-5">end</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="0575151521-3">)</span><span class="w">
+</span><span class="p" data-group-id="0575151521-9">#</span><span class="nc" data-group-id="0575151521-9">Explorer.DataFrame</span><span class="p" data-group-id="0575151521-9">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="0575151521-10">[</span><span class="mi">3</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="0575151521-10">]</span><span class="w">
+  </span><span class="n">species</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="0575151521-11">[</span><span class="s">&quot;Iris-setosa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-virginica&quot;</span><span class="p" data-group-id="0575151521-11">]</span><span class="w">
+  </span><span class="n">sepal_length_mean</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="0575151521-12">[</span><span class="mf">5.005999999999999</span><span class="p">,</span><span class="w"> </span><span class="mf">5.936</span><span class="p">,</span><span class="w"> </span><span class="mf">6.587999999999998</span><span class="p" data-group-id="0575151521-12">]</span><span class="w">
+  </span><span class="n">sepal_width_mean</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="0575151521-13">[</span><span class="mf">3.4180000000000006</span><span class="p">,</span><span class="w"> </span><span class="mf">2.7700000000000005</span><span class="p">,</span><span class="w"> </span><span class="mf">2.9739999999999998</span><span class="p" data-group-id="0575151521-13">]</span><span class="w">
+  </span><span class="n">petal_length_mean</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="0575151521-14">[</span><span class="mf">1.464</span><span class="p">,</span><span class="w"> </span><span class="mf">4.26</span><span class="p">,</span><span class="w"> </span><span class="mf">5.552</span><span class="p" data-group-id="0575151521-14">]</span><span class="w">
+  </span><span class="n">petal_width_mean</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="0575151521-15">[</span><span class="mf">0.2439999999999999</span><span class="p">,</span><span class="w"> </span><span class="mf">1.3259999999999998</span><span class="p">,</span><span class="w"> </span><span class="mf">2.026</span><span class="p" data-group-id="0575151521-15">]</span><span class="w">
+</span><span class="p" data-group-id="0575151521-9">&gt;</span></code></pre><p><code class="inline">arrange</code> expects a list of columns to sort by, while for-comprehensions
+in <code class="inline">filter</code> generate a list of conditions, which are joined using <code class="inline">and</code>.
+For example, to filter all entries have both sepal and petal length above
+average, using a filter on the column name, one could write:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">iris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.Datasets</span><span class="o">.</span><span class="n">iris</span><span class="p" data-group-id="6738788932-1">(</span><span class="p" data-group-id="6738788932-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="6738788932-2">(</span><span class="n">iris</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="6738788932-3">(</span><span class="p" data-group-id="6738788932-3">)</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">ends_with?</span><span class="p" data-group-id="6738788932-4">(</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;_length&quot;</span><span class="p" data-group-id="6738788932-4">)</span><span class="w"> </span><span class="k" data-group-id="6738788932-5">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="n">col</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="6738788932-6">(</span><span class="n">col</span><span class="p" data-group-id="6738788932-6">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k" data-group-id="6738788932-5">end</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="6738788932-2">)</span><span class="w">
+</span><span class="p" data-group-id="6738788932-7">#</span><span class="nc" data-group-id="6738788932-7">Explorer.DataFrame</span><span class="p" data-group-id="6738788932-7">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="6738788932-8">[</span><span class="mi">70</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="6738788932-8">]</span><span class="w">
+  </span><span class="n">sepal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="6738788932-9">[</span><span class="mf">7.0</span><span class="p">,</span><span class="w"> </span><span class="mf">6.4</span><span class="p">,</span><span class="w"> </span><span class="mf">6.9</span><span class="p">,</span><span class="w"> </span><span class="mf">6.5</span><span class="p">,</span><span class="w"> </span><span class="mf">6.3</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="6738788932-9">]</span><span class="w">
+  </span><span class="n">sepal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="6738788932-10">[</span><span class="mf">3.2</span><span class="p">,</span><span class="w"> </span><span class="mf">3.2</span><span class="p">,</span><span class="w"> </span><span class="mf">3.1</span><span class="p">,</span><span class="w"> </span><span class="mf">2.8</span><span class="p">,</span><span class="w"> </span><span class="mf">3.3</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="6738788932-10">]</span><span class="w">
+  </span><span class="n">petal_length</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="6738788932-11">[</span><span class="mf">4.7</span><span class="p">,</span><span class="w"> </span><span class="mf">4.5</span><span class="p">,</span><span class="w"> </span><span class="mf">4.9</span><span class="p">,</span><span class="w"> </span><span class="mf">4.6</span><span class="p">,</span><span class="w"> </span><span class="mf">4.7</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="6738788932-11">]</span><span class="w">
+  </span><span class="n">petal_width</span><span class="w"> </span><span class="n">float</span><span class="w"> </span><span class="p" data-group-id="6738788932-12">[</span><span class="mf">1.4</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.6</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="6738788932-12">]</span><span class="w">
+  </span><span class="n">species</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p" data-group-id="6738788932-13">[</span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Iris-versicolor&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="6738788932-13">]</span><span class="w">
+</span><span class="p" data-group-id="6738788932-7">&gt;</span></code></pre><blockquote><h4 class="warning">Do not mix comprehension and queries</h4><p>The filter inside a for-comprehension works at the meta level:
+it can only filter columns based on their names and dtypes, but
+not on their values. For example, this code does not make any
+sense and it will fail to compile:</p><pre><code class="makeup elixir" translate="no"><span class="o">|&gt;</span><span class="w"> </span><span class="nc">DF</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="4407945105-1">(</span><span class="w">
+  </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">across</span><span class="p" data-group-id="4407945105-2">(</span><span class="p" data-group-id="4407945105-2">)</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mean</span><span class="p" data-group-id="4407945105-3">(</span><span class="n">col</span><span class="p" data-group-id="4407945105-3">)</span><span class="w"> </span><span class="k" data-group-id="4407945105-4">do</span><span class="w">
+    </span><span class="n">col</span><span class="w">
+  </span><span class="k" data-group-id="4407945105-4">end</span><span class="w">
+</span><span class="k">end</span><span class="p" data-group-id="4407945105-1">)</span></code></pre><p>Another way to think about it, the comprehensions traverse on the
+columns themselves, the contents inside the comprehension do-block
+traverse on the values inside the columns.</p></blockquote><h2 id="module-implementation-details" class="section-heading">
+  <a href="#module-implementation-details" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">implementation-details</p>
+  </a>
+  Implementation details
+</h2>
+<p>Queries simply become lazy dataframe operations at runtime.
+For example, the following query</p><pre><code class="makeup elixir" translate="no"><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="7682536349-1">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7682536349-1">)</span></code></pre><p>is equivalent to</p><pre><code class="makeup elixir" translate="no"><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">filter_with</span><span class="p" data-group-id="6751674735-1">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="6751674735-2">fn</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">Explorer.Series</span><span class="o">.</span><span class="n">greater</span><span class="p" data-group-id="6751674735-3">(</span><span class="n">df</span><span class="p" data-group-id="6751674735-4">[</span><span class="s">&quot;nums&quot;</span><span class="p" data-group-id="6751674735-4">]</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="6751674735-3">)</span><span class="w"> </span><span class="k" data-group-id="6751674735-2">end</span><span class="p" data-group-id="6751674735-1">)</span></code></pre><p>This means that, whenever you want to generate queries programatically,
+you can fallback to the regular <code class="inline">_with</code> APIs.</p>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+<div class="summary-functions summary">
+  <h2>
+    <a href="#functions">Functions</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#**/2" translate="no">left ** right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#pow/2"><code class="inline">Explorer.Series.pow/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#*/2" translate="no">left * right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#multiply/2"><code class="inline">Explorer.Series.multiply/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#+/1" translate="no">+number</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Unary plus operator.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#+/2" translate="no">left + right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#add/2"><code class="inline">Explorer.Series.add/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#-/1" translate="no">-number</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Unary minus operator.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#-/2" translate="no">left - right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#subtract/2"><code class="inline">Explorer.Series.subtract/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#//2" translate="no">left / right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#divide/2"><code class="inline">Explorer.Series.divide/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#!=/2" translate="no">left != right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#not_equal/2"><code class="inline">Explorer.Series.not_equal/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#%3C/2" translate="no">left &lt; right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#less/2"><code class="inline">Explorer.Series.less/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#%3C=/2" translate="no">left &lt;= right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#less_equal/2"><code class="inline">Explorer.Series.less_equal/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#%3C%3E/2" translate="no">left &lt;&gt; right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>String concatenation operator.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#==/2" translate="no">left == right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#equal/2"><code class="inline">Explorer.Series.equal/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#%3E/2" translate="no">left &gt; right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#greater/2"><code class="inline">Explorer.Series.greater/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#%3E=/2" translate="no">left &gt;= right</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Delegate to <a href="Explorer.Series.html#greater_equal/2"><code class="inline">Explorer.Series.greater_equal/2</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#across/0" translate="no">across()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Accesses all columns in the dataframe.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#across/1" translate="no">across(selector)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Accesses the columns given by <code class="inline">selector</code> in the dataframe.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#col/1" translate="no">col(name)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Accesses a column by name.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#query/1" translate="no">query(expression)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Builds an anonymous function from a query.</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="**/2">
+
+  <div class="detail-header">
+    <a href="#**/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left ** right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#pow/2"><code class="inline">Explorer.Series.pow/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="*/2">
+
+  <div class="detail-header">
+    <a href="#*/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left * right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#multiply/2"><code class="inline">Explorer.Series.multiply/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="+/1">
+
+  <div class="detail-header">
+    <a href="#+/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">+number</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L468" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Unary plus operator.</p><p>Works with numbers and series.</p>
+  </section>
+</section>
+<section class="detail" id="+/2">
+
+  <div class="detail-header">
+    <a href="#+/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left + right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#add/2"><code class="inline">Explorer.Series.add/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="-/1">
+
+  <div class="detail-header">
+    <a href="#-/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">-number</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L458" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Unary minus operator.</p><p>Works with numbers and series.</p>
+  </section>
+</section>
+<section class="detail" id="-/2">
+
+  <div class="detail-header">
+    <a href="#-/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left - right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#subtract/2"><code class="inline">Explorer.Series.subtract/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="//2">
+
+  <div class="detail-header">
+    <a href="#//2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left / right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#divide/2"><code class="inline">Explorer.Series.divide/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="!=/2">
+
+  <div class="detail-header">
+    <a href="#!=/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left != right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#not_equal/2"><code class="inline">Explorer.Series.not_equal/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="%3C/2">
+
+  <div class="detail-header">
+    <a href="#%3C/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left &lt; right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#less/2"><code class="inline">Explorer.Series.less/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="%3C=/2">
+
+  <div class="detail-header">
+    <a href="#%3C=/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left &lt;= right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#less_equal/2"><code class="inline">Explorer.Series.less_equal/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="%3C%3E/2">
+
+  <div class="detail-header">
+    <a href="#%3C%3E/2" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">left &lt;&gt; right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L490" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>String concatenation operator.</p><p>Works with strings and series of strings.</p><h2 id="%3C%3E/2-examples" class="section-heading">
+  <a href="#%3C%3E/2-examples" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">examples</p>
+  </a>
+  Examples
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="7286296136-1">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">first_name</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">last_name</span><span class="p" data-group-id="7286296136-1">)</span></code></pre><p>If you want to convert concatenate non-string
+series, you can explicitly cast them to string
+before:</p><pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="9292631494-1">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">cast</span><span class="p" data-group-id="9292631494-2">(</span><span class="n">year</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="p" data-group-id="9292631494-2">)</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot;-&quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">cast</span><span class="p" data-group-id="9292631494-3">(</span><span class="n">month</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="p" data-group-id="9292631494-3">)</span><span class="p" data-group-id="9292631494-1">)</span></code></pre><p>Or use format:</p><pre><code class="makeup elixir" translate="no"><span class="nc">DF</span><span class="o">.</span><span class="n">mutate</span><span class="p" data-group-id="2510683403-1">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">format</span><span class="p" data-group-id="2510683403-2">(</span><span class="p" data-group-id="2510683403-3">[</span><span class="n">year</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">month</span><span class="p" data-group-id="2510683403-3">]</span><span class="p" data-group-id="2510683403-2">)</span><span class="p" data-group-id="2510683403-1">)</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="==/2">
+
+  <div class="detail-header">
+    <a href="#==/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left == right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#equal/2"><code class="inline">Explorer.Series.equal/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="%3E/2">
+
+  <div class="detail-header">
+    <a href="#%3E/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left &gt; right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#greater/2"><code class="inline">Explorer.Series.greater/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="%3E=/2">
+
+  <div class="detail-header">
+    <a href="#%3E=/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">left &gt;= right</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L450" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Delegate to <a href="Explorer.Series.html#greater_equal/2"><code class="inline">Explorer.Series.greater_equal/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="across/0">
+
+  <div class="detail-header">
+    <a href="#across/0" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">across()</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L576" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Accesses all columns in the dataframe.</p><p>This is the equivalent to <code class="inline">across(0..-1//1)</code>.</p><p>See the module docs for more information.</p>
+  </section>
+</section>
+<section class="detail" id="across/1">
+
+  <div class="detail-header">
+    <a href="#across/1" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">across(selector)</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L589" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Accesses the columns given by <code class="inline">selector</code> in the dataframe.</p><p><a href="#across/1"><code class="inline">across/1</code></a> is used as the generator inside for-comprehensions.</p><p>See the module docs for more information.</p>
+  </section>
+</section>
+<section class="detail" id="col/1">
+
+  <div class="detail-header">
+    <a href="#col/1" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">col(name)</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L565" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Accesses a column by name.</p><p>If your column name contains whitespace or start with
+uppercase letters, you can still access its name by
+using this macro:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2688484303-1">(</span><span class="ss">&quot;unusual nums&quot;</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2688484303-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="2688484303-2">]</span><span class="p" data-group-id="2688484303-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="2688484303-3">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="p" data-group-id="2688484303-4">(</span><span class="s">&quot;unusual nums&quot;</span><span class="p" data-group-id="2688484303-4">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="2688484303-3">)</span><span class="w">
+</span><span class="p" data-group-id="2688484303-5">#</span><span class="nc" data-group-id="2688484303-5">Explorer.DataFrame</span><span class="p" data-group-id="2688484303-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="2688484303-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="2688484303-6">]</span><span class="w">
+  </span><span class="n">unusual</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="2688484303-7">[</span><span class="mi">3</span><span class="p" data-group-id="2688484303-7">]</span><span class="w">
+</span><span class="p" data-group-id="2688484303-5">&gt;</span></code></pre><p><code class="inline">name</code> must be an atom, a string, or an integer.
+It is equivalent to <code class="inline">df[name]</code> but inside a query.</p><p>This can also be used if you want to access a column
+programatically, for example:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8528635159-1">(</span><span class="ss">nums</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8528635159-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8528635159-2">]</span><span class="p" data-group-id="8528635159-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">:nums</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Explorer.DataFrame</span><span class="o">.</span><span class="n">filter</span><span class="p" data-group-id="8528635159-3">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="p" data-group-id="8528635159-4">(</span><span class="o">^</span><span class="n">name</span><span class="p" data-group-id="8528635159-4">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8528635159-3">)</span><span class="w">
+</span><span class="p" data-group-id="8528635159-5">#</span><span class="nc" data-group-id="8528635159-5">Explorer.DataFrame</span><span class="p" data-group-id="8528635159-5">&lt;</span><span class="w">
+  </span><span class="nc">Polars</span><span class="p" data-group-id="8528635159-6">[</span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8528635159-6">]</span><span class="w">
+  </span><span class="n">nums</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="p" data-group-id="8528635159-7">[</span><span class="mi">3</span><span class="p" data-group-id="8528635159-7">]</span><span class="w">
+</span><span class="p" data-group-id="8528635159-5">&gt;</span></code></pre><p>For traversing multiple columns programatically,
+see <a href="#across/0"><code class="inline">across/0</code></a> and <a href="#across/1"><code class="inline">across/1</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="query/1">
+
+  <div class="detail-header">
+    <a href="#query/1" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">query(expression)</h1>
+
+      <a href="https://github.com/elixir-nx/explorer/blob/v0.5.7-dev/lib/explorer/query.ex#L279" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Builds an anonymous function from a query.</p><p>This is the entry point used by <a href="Explorer.DataFrame.html#filter/2"><code class="inline">Explorer.DataFrame.filter/2</code></a>
+and friends to convert queries into anonymous functions.
+See the moduledoc for more information.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+        <p>
+
+            <span class="line">
+              <a href="https://hex.pm/packages/explorer/0.5.7-dev" class="footer-hex-package">Hex Package</a>
+
+              <a href="https://preview.hex.pm/preview/explorer/0.5.7-dev">Hex Preview</a>
+
+                (<a href="https://preview.hex.pm/preview/explorer/0.5.7-dev/show/lib/explorer/query.ex">current file</a>)
+
+            </span>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+              Search HexDocs
+            </button>
+
+              <a href="Explorer.epub" title="ePub version">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.29.4) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>
